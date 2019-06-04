@@ -1,0 +1,23 @@
+body {
+    padding: 0;
+    margin: 0;
+    color: rgb(0, 0, 0);
+    font-family: sans-serif;
+}
+
+
+input:-webkit-autofill {/*自动填充账号密码的背景色*/
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+}
+
+.el-button--text {
+    color: black!important;
+}
+.el-button--text:hover {
+    color: #00edc5 !important;
+}
+
+.el-popover {
+    min-width: 50px!important;
+    /*width: 50px!important;*/
+}
