@@ -3,9 +3,14 @@
         <el-container>
             <el-aside style="background-color: #ffffff">
                 <div class="header-box">
-                    <header-image :user="userData" size="large" @header-click="goMainPage"></header-image>
+                    <header-image :user-id="userData._id"
+                                  :header-image="userData.userImg"
+                                  size="large"
+                                  @header-click="goMainPage"
+                    ></header-image>
                 </div>
-                <el-menu>
+                <el-menu router
+                         default-active="/user/settings/base">
                     <!--<el-submenu index="1">
                         <template slot="title">
                             <i class="el-icon-location"></i>
@@ -24,20 +29,23 @@
                             <el-menu-item index="1-4-1">选项1</el-menu-item>
                         </el-submenu>
                     </el-submenu>-->
-                    <el-menu-item index="2">
-<!--                        <i class="el-icon-menu"></i>-->
+                    <el-menu-item index="/user/settings/base">
+                        <font-awesome-icon :icon="['fas', 'cog']" class="awesome"></font-awesome-icon>
                         <span slot="title">通用设置</span>
                     </el-menu-item>
-                    <el-menu-item index="3">
-<!--                        <i class="el-icon-document"></i>-->
+                    <el-menu-item index="/user/settings/account">
+                        <font-awesome-icon :icon="['fas', 'user']" class="awesome"></font-awesome-icon>
                         <span slot="title">账户设置</span>
                     </el-menu-item>
-                    <el-menu-item index="4">
-<!--                        <i class="el-icon-setting"></i>-->
+                    <el-menu-item index="/user/settings/advance">
+                        <font-awesome-icon :icon="['fas', 'tools']" class="awesome"></font-awesome-icon>
                         <span slot="title">高级设置</span>
                     </el-menu-item>
                 </el-menu>
             </el-aside>
+            <el-main>
+                <router-view></router-view>
+            </el-main>
         </el-container>
     </div>
 </template>
@@ -53,10 +61,6 @@
 
         data() {
             return {
-                userData: {
-                    _id: localStorage.getItem('login-user-id'),
-                    userImg: 'http://localhost:8088/image/?viewer=060c6247f382c583b8b2f0c901f9fa74',
-                },
             };
         },
 
@@ -64,6 +68,24 @@
             goMainPage(id) {
                 this.$router.push({name: 'userMain'});
             }
+        },
+
+        computed: {
+            userData() {
+                return {
+                    _id: localStorage.getItem('login-user-id'),
+                    email: localStorage.getItem('login-user-email'),
+                    userImg: this.UserCursor?
+                        this.UserCursor.profile.headerImage:
+                        'http://localhost:8088/header/?img=07983baf1b5e4d298719bde5adc69e27',
+                }
+            },
+        },
+
+        meteor: {
+            UserCursor() {
+                return Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: localStorage.getItem('login-user-id')});
+            },
         }
     }
 </script>

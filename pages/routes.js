@@ -16,6 +16,10 @@ import LayoutMain from "./ui/LayoutMain";
 import User from "./ui/User";
 import UserSettings from "./ui/UserSettings";
 import MessageEdit from "./ui/MessageEdit";
+import UserSettingsBase from "./ui/UserSettingsBase";
+import UserSettingsAccount from "./ui/UserSettingsAccount";
+import UserSettingsProfile from "./ui/UserSettingsProfile";
+import UserSettingsAdvance from "./ui/UserSettingsAdvance";
 
 RouterFactory.configure( router => {
     router.addRoutes([
@@ -75,6 +79,32 @@ RouterFactory.configure( router => {
             path: '/user/settings',
             name: 'userSettings',
             component: UserSettings,
+            children: [
+                {
+                    path: '/',
+                    component: UserSettingsBase,
+                },
+                {
+                    path: 'base',
+                    name: 'baseSettings',
+                    component: UserSettingsBase,
+                },
+                {
+                    path: 'account',
+                    name: 'accountSettings',
+                    component: UserSettingsAccount,
+                },
+                {
+                    path: 'profile',
+                    name: 'userInfoSettings',
+                    component: UserSettingsProfile,
+                },
+                {
+                    path: 'advance',
+                    name: 'advancedSettings',
+                    component: UserSettingsAdvance,
+                }
+            ]
         },
     ]);
 });
