@@ -180,7 +180,9 @@
             FocusedUserCursor() {
                 if(this.commentFocus.type === 'sub') return Meteor.users.findOne({_id: this.commentFocus.to.user});
                 else if(this.commentFocus.type === 'comment') return Meteor.users.findOne({_id: this.commentFocus.to.user});
-                else return Meteor.users.findOne({_id: Messages.findOne({_id: this.msgId}).user});
+                else return Messages.findOne({_id: this.msgId})?
+                        Meteor.users.findOne({_id: Messages.findOne({_id: this.msgId}).user}):
+                        {};
             },
         }
     }

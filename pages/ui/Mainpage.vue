@@ -75,60 +75,6 @@
                                                   @operate="messageOperate"
                                     ></message-card>
                                 </el-col>
-                                <el-col :span="12" v-if="showEdit">
-                                    <el-row type="flex" justify="space-between">
-                                        <el-col :span="10" :offset="2">短博</el-col>
-                                        <el-col :span="8">
-                                            <el-button size="mini"
-                                                       @click="cancelEdit"
-                                            >取消</el-button>
-                                            <el-button size="mini"
-                                                       type="primary"
-                                                       @click="updateAndPublishMessage"
-                                            >确认修改</el-button>
-                                        </el-col>
-                                    </el-row>
-                                    <el-row>
-                                        <el-col :span="20" :offset="2">
-                                            <el-input
-                                                    type="textarea"
-                                                    :autosize="{minRows: 2, maxRows: 5}"
-                                                    maxlength="150"
-                                                    show-word-limit
-                                                    placeholder="请输入内容"
-                                                    v-model="messageOperated.content"
-                                            ></el-input>
-                                        </el-col>
-                                    </el-row>
-                                    <el-row>
-                                        <el-col :span="22" :offset="1" style="margin-bottom: 10px;">标签：</el-col>
-                                        <el-col :span="20" :offset="2">
-                                            <el-tag
-
-                                                    v-for="(tag, index) in messageOperated.tags"
-                                                    :key="index"
-                                                    closable
-                                                    :disable-transitions="false"
-                                                    size="small"
-                                                    @close="handleCloseEdit(tag)">
-                                                {{tag.value}}
-                                            </el-tag>
-                                            <el-input
-                                                    class="input-new-tag"
-                                                    v-if="inputVisible"
-                                                    v-model="tagValue"
-                                                    ref="saveTagInputEdit"
-                                                    size="mini"
-                                                    @keyup.enter.native="tagInputConfirmEdit"
-                                                    @blur="tagInputConfirmEdit"
-                                            ></el-input>
-                                            <el-button v-else
-                                                       class="button-new-tag"
-                                                       size="mini"
-                                                       @click="showInputEdit">添加标签</el-button>
-                                        </el-col>
-                                    </el-row>
-                                </el-col>
                             </el-row>
                         </el-dialog>
                     </div>
@@ -141,9 +87,8 @@
 <!--        <div>-->
 <!--            <el-upload-->
 <!--                    class="upload-demo"-->
-<!--                    action="http://localhost:8088/upload"-->
-<!--                    multiple-->
-<!--                    :limit="3">-->
+<!--                    action="http://localhost:8088/upload/header"-->
+<!--                    :limit="1">-->
 <!--                <el-button size="small" type="primary">点击上传</el-button>-->
 <!--            </el-upload>-->
 <!--        </div>-->
@@ -224,13 +169,8 @@
                 },
 
                 messageOperatedId: '',
-                messageOperated: {
-                    content: '',
-                    tags: '',
-                },
 
                 dialogViewMessageVisible: false,
-                showEdit: false,
             };
         },
 
@@ -264,7 +204,7 @@
             publishShortMessage() {
                 if(!this.shortMessage.content) this.$message('请输入要发布的消息内容！');
                 else {
-                    Meteor.call('message.publish', this.shortMessage, localStorage.getItem('login-user-email'), (error, msgId) => {
+                    Meteor.call('message.publish', this.shortMessage, localStorage.getItem('login-user-id'), (error, msgId) => {
                         if(error) console.log(error);
                         else {
                             Meteor.call('user.addMessage', localStorage.getItem('login-user-id'), msgId, (error) => {
@@ -298,10 +238,13 @@
                         value: this.tagValue,
                         agree: 1,
                         disagree: 0,
-                        owner: localStorage.getItem('login-user-email'),
+                        user: localStorage.getItem('login-user-id'),
                     });
                     this.inputVisible = false;
                     this.tagValue = '';
+                }
+                else {
+                    this.inputVisible = false;
                 }
             },
             handleClose(tag) {
@@ -330,8 +273,7 @@
                 this.dialogViewMessageVisible = true;
             },
             editMessage(id) {
-                this.viewMessage(id);
-                this.showEdit = true;
+                this.$router.push(`/message-edit/${id}`);
             },
             deleteMessage(id) {
                 this.$confirm('即将删除这条消息, 是否继续?', '提示', {
@@ -354,62 +296,6 @@
                         message: '取消删除'
                     });
                 });
-            },
-            // 编辑修改短博相关
-            updateAndPublishMessage() {
-                const msg = this.messageOperated;
-                const old = this.oneMessageData;
-                console.log('old msg', old);
-                console.log('new message', msg);
-                axios.post(`${Meteor.settings.public.serviceUrl}/message/update`, {
-                    id: old._id,
-                    newMessage: msg
-                }).then( res => {
-                    console.log(res);
-                    this.$message({
-                        message: '修改成功',
-                        type: 'success'
-                    });
-                    this.clearUpEdit();
-                }).catch( err => {
-                    console.log(err);
-                    this.$message.error({
-                        message: '修改失败',
-                    });
-                });
-            },
-            handleCloseEdit(tag) {
-                const list = [];
-                this.messageOperated.tags.forEach( item => {
-                    if(item.value !== tag.value) list.push(item);
-                });
-                this.messageOperated.tags = list;
-            },
-            tagInputConfirmEdit() {
-                if(this.tagValue.length >= 20) this.$message('标签长度不可长于20字！');
-                else if (this.tagValue) {
-                    this.messageOperated.tags.push({
-                        value: this.tagValue,
-                        agree: 1,
-                        disagree: 0,
-                        owner: localStorage.getItem('login-user-email'),
-                    });
-                    this.inputVisible = false;
-                    this.tagValue = '';
-                }
-            },
-            clearUpEdit() {
-                this.messageOperated.content = '';
-                this.messageOperated.tags = [];
-            },
-            showInputEdit() {
-                this.inputVisible = true;
-                this.$nextTick( _ => {
-                    this.$refs.saveTagInputEdit.$refs.input.focus();
-                });
-            },
-            cancelEdit() {
-                this.showEdit = false;
             },
         },
 
@@ -444,9 +330,6 @@
             OneMessageCursor() {
                 const msg = Messages.findOne({_id: this.messageOperatedId});
                 if(!msg) return {};
-                // console.log('aaaaaaaaaaaa',msg);
-                this.messageOperated.content = msg.content;
-                this.messageOperated.tags = msg.tags;
                 if(msg.user === localStorage.getItem('login-user-email')) return {
                     ...msg,
                     isOwner: true

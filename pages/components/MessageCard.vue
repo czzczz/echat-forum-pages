@@ -157,7 +157,7 @@
             $subscribe: {},
 
             UpUserCursor() {
-                return this.message? Meteor.users.findOne({'profile.email': this.message.user}): undefined;
+                return this.message? Meteor.users.findOne({_id: this.message.user}): undefined;
             },
 
             LoginUserCursor() {},

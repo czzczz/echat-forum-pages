@@ -74,7 +74,7 @@
 <style scoped>
     .img-box {
         border-radius: 50%;
-        border: 1px solid black;
+        /*border: 1px solid black;*/
         overflow: hidden;
     }
     .operation-box {

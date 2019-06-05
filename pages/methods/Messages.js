@@ -15,18 +15,6 @@ Meteor.methods({
         };
         return Messages.insert(newMessage);
     },
-    'message.edit'(_id, difference) {
-        // const msgOld = Messages.findOne(_id);
-        // console.log('change message', msgOld);
-        // console.log('new message', message);
-        // axios.post('http://localhost:8088/message/check', {
-        //     userEmail: msgOld.user,
-        //     updatedAt: msgOld.updatedAt,
-        //     message: message
-        // }).then( res => {
-        //     console.log(res.data)
-        // });
-    },
     'message.delete'(id) {
         Messages.remove(id);
         return id;

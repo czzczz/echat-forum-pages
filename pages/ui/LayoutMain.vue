@@ -67,6 +67,7 @@
         methods: {
             toTop() {
                 console.log('toTop');
+                this.scrollLength = 0;
                 this.showHeader();
                 document.getElementById("main-content").scrollIntoView();
             },
@@ -117,7 +118,7 @@
                     email: localStorage.getItem('login-user-email'),
                     userImg: this.UserCursor?
                         this.UserCursor.profile.headerImage:
-                        'http://localhost:8088/image/?viewer=060c6247f382c583b8b2f0c901f9fa74',
+                        'http://localhost:8088/header/?img=07983baf1b5e4d298719bde5adc69e27',
                 }
             },
         },

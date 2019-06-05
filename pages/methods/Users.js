@@ -25,7 +25,7 @@ Meteor.methods({
 
         if(!profile.nickname) profile.nickname = profile.email;
 
-        profile.headerImage = 'http://localhost:8088/image/?viewer=060c6247f382c583b8b2f0c901f9fa74';
+        profile.headerImage = 'http://localhost:8088/header/?img=07983baf1b5e4d298719bde5adc69e27';
 
         const config = {
             email: profile.email,

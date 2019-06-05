@@ -15,6 +15,7 @@ import Mainpage from "./ui/Mainpage";
 import LayoutMain from "./ui/LayoutMain";
 import User from "./ui/User";
 import UserSettings from "./ui/UserSettings";
+import MessageEdit from "./ui/MessageEdit";
 
 RouterFactory.configure( router => {
     router.addRoutes([
@@ -47,6 +48,10 @@ RouterFactory.configure( router => {
                     path: '/home',
                     name: 'home',
                     component: Mainpage,
+                },
+                {
+                    path: '/message-edit/:msgId',
+                    component: MessageEdit,
                 },
                 {
                     path: '/user',
