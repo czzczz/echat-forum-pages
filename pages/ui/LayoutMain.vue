@@ -118,7 +118,7 @@
                     email: localStorage.getItem('login-user-email'),
                     userImg: this.UserCursor?
                         this.UserCursor.profile.headerImage:
-                        'http://localhost:8088/header/?img=07983baf1b5e4d298719bde5adc69e27',
+                        `${Meteor.settings.public.serviceUrl}/header/?img=07983baf1b5e4d298719bde5adc69e27`,
                 }
             },
         },

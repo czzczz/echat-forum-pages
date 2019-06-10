@@ -33,6 +33,10 @@
                         <font-awesome-icon :icon="['fas', 'cog']" class="awesome"></font-awesome-icon>
                         <span slot="title">通用设置</span>
                     </el-menu-item>
+                    <el-menu-item index="/user/settings/profile">
+                        <font-awesome-icon :icon="['fas', 'id-card']" class="awesome"></font-awesome-icon>
+                        <span slot="title">信息设置</span>
+                    </el-menu-item>
                     <el-menu-item index="/user/settings/account">
                         <font-awesome-icon :icon="['fas', 'user']" class="awesome"></font-awesome-icon>
                         <span slot="title">账户设置</span>
@@ -43,7 +47,7 @@
                     </el-menu-item>
                 </el-menu>
             </el-aside>
-            <el-main>
+            <el-main style="padding-bottom: 0">
                 <router-view></router-view>
             </el-main>
         </el-container>

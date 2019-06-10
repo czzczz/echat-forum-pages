@@ -8,10 +8,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
+import Croppa from 'vue-croppa';
 
 // import css style
 import 'element-ui/lib/theme-chalk/index.css';
 import 'office-ui-fabric-vue/dist/index.css';
+import 'vue-croppa/dist/vue-croppa.css';
 
 import routerFactory from '/pages/routes';
 
@@ -26,6 +28,7 @@ Vue.use(Vuex);
 Vue.use(VueMeteorTracker);
 Vue.use(ElementUI);
 Vue.use(OfficeUIFabricVue);
+Vue.use(Croppa, { componentName: 'header-cropper' });
 
 
 import Layout from '/pages/ui/Layout';

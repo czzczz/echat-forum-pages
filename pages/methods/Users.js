@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 Meteor.methods({
     'user.add'(userInfo, time) {
         // console.log('user', userInfo)
@@ -23,7 +25,7 @@ Meteor.methods({
         profile.articles = [];
         profile.articlesDropped = [];
 
-        if(!profile.nickname) profile.nickname = profile.email;
+        if(!profile.nickname) profile.nickname ='邮箱用户' + profile.email.split('@')[0];
 
         profile.headerImage = 'http://localhost:8088/header/?img=07983baf1b5e4d298719bde5adc69e27';
 
@@ -41,6 +43,21 @@ Meteor.methods({
             email: userInfo.email,
             password: userInfo.password
         };
+    },
+    'user.edit'(uid, data) {
+        const userProfile = Meteor.users.findOne({_id: uid}).profile;
+        if(!userProfile) return null;
+        _.keys(data).forEach(key => {
+            userProfile[key] = data[key];
+        });
+        userProfile.history.push({
+            operation: 'update',
+            operator: uid,
+            time: new Date().getTime(),
+            detail: `user update profile`
+        });
+
+        return Meteor.users.update({_id: uid}, {$set: {'profile': userProfile}});
     },
     'user.addMessage'(user, msgId) {
         const userProfile = Meteor.users.findOne({_id: user})? Meteor.users.findOne({_id: user}).profile: undefined;
