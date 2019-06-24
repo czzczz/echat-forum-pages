@@ -42,6 +42,7 @@
         data() {
             return {
                 activeMenuIndex: '1',
+                serviceUrl: Meteor.settings.public.serviceUrl,
 
                 headerVisible: true,
                 scrollLength: 0,
@@ -117,8 +118,8 @@
                     _id: localStorage.getItem('login-user-id'),
                     email: localStorage.getItem('login-user-email'),
                     userImg: this.UserCursor?
-                        this.UserCursor.profile.headerImage:
-                        `${Meteor.settings.public.serviceUrl}/header/?img=07983baf1b5e4d298719bde5adc69e27`,
+                        this.serviceUrl + this.UserCursor.profile.headerImage:
+                        `${this.serviceUrl}/header/?img=07983baf1b5e4d298719bde5adc69e27`,
                 }
             },
         },

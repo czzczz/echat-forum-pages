@@ -37,14 +37,15 @@
                     </div>
                 </el-col>
                 <el-col :span="8">
-                    <div v-if="!toEdit">
+                    <div>
                         <div style="height: 148px; width: 148px;">
-                            <img :src="userData.headerImage" width="148px" height="148px"/>
+                            <img :src="serviceUrl + userData.headerImage" width="148px" height="148px"/>
                         </div>
                     </div>
-                    <div v-else>
+                    <div v-if="toEdit">
                         <el-upload
                                 :action="`${serviceUrl}/upload/image`"
+                                class="header-uploader"
                                 list-type="picture-card"
                                 :show-file-list="false"
                                 accept="image/jpg, image/png"
@@ -81,10 +82,20 @@
                             </el-row>
                             <div style="margin-top: 20px; display: flex; justify-content: center;">
                                 <el-row>
-                                    <el-col>
+                                    <el-col :span="12">
                                         <header-cropper ref="headerCropper"
-                                                        :zoom-speed="6"
-                                                        :initial-image="uploadImg"></header-cropper>
+                                                        :zoom-speed="12"
+                                                        :initial-image="uploadImg"
+                                                        @initial-image-loaded="updatePreview"
+                                                        @mouseup.prevent="updatePreview"
+                                                        @rotate="updatePreview"
+                                                        @zoom="updatePreview"
+                                        ></header-cropper>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <img :src="cropImg || ''"
+                                             style="height: 148px; width: 148px; border-radius: 50%;"
+                                             id="cropped-result"/>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -97,6 +108,7 @@
 </template>
 
 <script>
+    import axios from 'axios';
 
     let userDataBackup = {};
 
@@ -128,6 +140,7 @@
                 uploadImg: '',//上传的文件
                 imageCropVisible: false,
                 cropImg: '',//剪切的文件
+                updateCropTime: 0,
             };
         },
 
@@ -151,7 +164,28 @@
                     })
                     .catch(_ => {});
             },
+            updatePreview() {
+                const mycanvas = this.$refs.headerCropper.getCanvas();
+                this.cropImg = mycanvas.toDataURL();
+            },
             sureToCrop() {
+                this.$refs.headerCropper.generateBlob(blob => {
+                    const fd = new FormData();
+                    fd.append('file', blob);
+                    axios({
+                        method: 'post',
+                        url: this.serviceUrl + '/upload/header',
+                        data: fd,
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then( res => {
+                        console.log(res.data);
+                        this.userData.headerImage = res.data.url;
+                    }).catch( err => {
+                        console.log(err);
+                    });
+                });
 
                 this.imageCropVisible = false;
             },
@@ -216,5 +250,9 @@
     .setting-container {
         margin-top: 40px;
         margin-left: 40px;
+    }
+    .header-uploader {
+        position: absolute;
+        top: 0;
     }
 </style>

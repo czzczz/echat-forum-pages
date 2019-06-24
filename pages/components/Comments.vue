@@ -17,7 +17,7 @@
                 <el-col :span="2">
                     <div style="width: 30px;">
                         <header-image :user-id="loginUserData._id"
-                                      :header-image="loginUserData.headerImage"
+                                      :header-image="serviceUrl + loginUserData.headerImage"
                                       @header-click="goMainPage"
                                       size="mini"
                         ></header-image>
@@ -73,6 +73,7 @@
                     },
                     comment: {},
                 },
+                serviceUrl: Meteor.settings.public.serviceUrl,
             };
         },
 

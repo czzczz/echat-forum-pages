@@ -3,7 +3,7 @@
         <el-row type="flex" justify="space-between">
             <el-col :span="10">
                 <ou-persona size="sm"
-                            :src="upUserData.headerImage"
+                            :src="serviceUrl + upUserData.headerImage"
                             :primaryText="upUserData.nickname"
                             :secondaryText="upUserData.email"/>
             </el-col>
@@ -85,6 +85,7 @@
             return {
                 optionPopoverVisible: false,
                 commentsVisible: false,
+                serviceUrl: Meteor.settings.public.serviceUrl,
             };
         },
 

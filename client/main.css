@@ -21,3 +21,7 @@ input:-webkit-autofill {/*自动填充账号密码的背景色*/
     min-width: 50px!important;
     /*width: 50px!important;*/
 }
+
+.header-uploader .el-upload {/*用户信息设置UserSettingsProfile*/
+    background-color: rgba(0,0,0,0)!important;
+}

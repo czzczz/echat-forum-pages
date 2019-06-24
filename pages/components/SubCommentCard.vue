@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="16" class="header-container">
                 <header-image :user-id="sub.user"
-                              :header-image="sub.headerImage"
+                              :header-image="serviceUrl + sub.headerImage"
                               @header-click="goMainPage"
                               size="mini"
                 ></header-image>
@@ -43,6 +43,8 @@
             return {
                 sub: {},
                 commentButtonVisible: false,
+
+                serviceUrl: Meteor.settings.public.serviceUrl,
             };
         },
 

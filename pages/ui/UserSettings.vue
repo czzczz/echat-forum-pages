@@ -4,7 +4,7 @@
             <el-aside style="background-color: #ffffff">
                 <div class="header-box">
                     <header-image :user-id="userData._id"
-                                  :header-image="userData.userImg"
+                                  :header-image="serviceUrl + userData.userImg"
                                   size="large"
                                   @header-click="goMainPage"
                     ></header-image>
@@ -65,6 +65,7 @@
 
         data() {
             return {
+                serviceUrl: Meteor.settings.public.serviceUrl,
             };
         },
 
@@ -81,7 +82,7 @@
                     email: localStorage.getItem('login-user-email'),
                     userImg: this.UserCursor?
                         this.UserCursor.profile.headerImage:
-                        'http://localhost:8088/header/?img=07983baf1b5e4d298719bde5adc69e27',
+                        '/header/?img=07983baf1b5e4d298719bde5adc69e27',
                 }
             },
         },
