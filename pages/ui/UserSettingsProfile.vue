@@ -45,6 +45,7 @@
                     <div v-if="toEdit">
                         <el-upload
                                 :action="`${serviceUrl}/upload/image`"
+                                ref="imageUploader"
                                 class="header-uploader"
                                 list-type="picture-card"
                                 :show-file-list="false"
@@ -81,8 +82,8 @@
                                 </el-col>
                             </el-row>
                             <div style="margin-top: 20px; display: flex; justify-content: center;">
-                                <el-row>
-                                    <el-col :span="12">
+                                <el-row style="width: 100%">
+                                    <el-col :span="12" style="display: flex; justify-content: center;">
                                         <header-cropper ref="headerCropper"
                                                         :zoom-speed="12"
                                                         :initial-image="uploadImg"
@@ -92,7 +93,7 @@
                                                         @zoom="updatePreview"
                                         ></header-cropper>
                                     </el-col>
-                                    <el-col :span="12">
+                                    <el-col :span="12" style="display: flex; justify-content: center;">
                                         <img :src="cropImg || ''"
                                              style="height: 148px; width: 148px; border-radius: 50%;"
                                              id="cropped-result"/>
@@ -147,12 +148,16 @@
         methods: {
             uploadSuccess(response, file, fileList) {
                 console.log(response);
-                this.uploadImg = this.serviceUrl +'/' + response.url;
+                this.uploadImg = this.serviceUrl + response.url;
                 this.imageCropVisible = true;
+                this.$refs.headerCropper.refresh();
             },
             handleClose(done) {
                 this.$confirm('是否放弃更换头像并返回？')
                     .then(_ => {
+                        this.$refs.imageUploader.clearFiles();
+                        this.uploadImg = '';
+                        this.cropImg = '';
                         done();
                     })
                     .catch(_ => {});
@@ -160,6 +165,9 @@
             handleCancel() {
                 this.$confirm('是否放弃更换头像并返回？')
                     .then(_ => {
+                        this.$refs.imageUploader.clearFiles();
+                        this.uploadImg = '';
+                        this.cropImg = '';
                         this.imageCropVisible = false;
                     })
                     .catch(_ => {});
