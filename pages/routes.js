@@ -20,6 +20,11 @@ import UserSettingsBase from "./ui/UserSettingsBase";
 import UserSettingsAccount from "./ui/UserSettingsAccount";
 import UserSettingsProfile from "./ui/UserSettingsProfile";
 import UserSettingsAdvance from "./ui/UserSettingsAdvance";
+import Article from "./ui/Article";
+import ArticleAdd from "./ui/ArticleAdd";
+import ArticleEdit from "./ui/ArticleEdit";
+import ArticlePreview from "./ui/ArticlePreview";
+import ArticleViewer from "./ui/ArticleViewer";
 
 RouterFactory.configure( router => {
     router.addRoutes([
@@ -71,6 +76,32 @@ RouterFactory.configure( router => {
                             path: 'page/:userId',
                             component: Mainpage,
                         },
+                    ]
+                },
+                {
+                    path: '/article',
+                    component: Article,
+                    children: [
+                        {
+                            path: 'add',
+                            name: 'ArticleAdd',
+                            component: ArticleAdd,
+                        },
+                        {
+                            path: 'edit',
+                            name: 'ArticleEdit',
+                            component: ArticleEdit,
+                        },
+                        {
+                            path: 'preview',
+                            name: 'ArticlePreview',
+                            component: ArticlePreview,
+                        },
+                        {
+                            path: 'viewer',
+                            name: 'ArticleViewer',
+                            component: ArticleViewer,
+                        }
                     ]
                 }
             ]

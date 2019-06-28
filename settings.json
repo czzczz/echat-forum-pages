@@ -1,5 +1,6 @@
 {
     "public": {
-        "serviceUrl": "http://127.0.0.1:8088"
+        "serviceUrl": "http://127.0.0.1:8088",
+        "tinymceApiKey": "6k4mek8iqifmmnzafco8p3fkdjksdwh3dph8mxyhxokgwp8k"
     }
 }

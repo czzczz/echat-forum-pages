@@ -9,7 +9,8 @@
                     <div class="info-container">
                         <el-row type="flex" justify="space-between">
                             <el-col :span="10" :offset="2">短博</el-col>
-                            <el-col :span="4">
+                            <el-col :span="8">
+                                <el-button size="mini" type="primary" @click="articleAdd">发布长文章</el-button>
                                 <el-button size="mini" type="primary" @click="publishShortMessage">发布</el-button>
                             </el-col>
                         </el-row>
@@ -201,6 +202,9 @@
         },
 
         methods: {
+            articleAdd() {
+                this.$router.push({path: '/article/add'});
+            },
             publishShortMessage() {
                 if(!this.shortMessage.content) this.$message('请输入要发布的消息内容！');
                 else {
