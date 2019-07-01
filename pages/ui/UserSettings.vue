@@ -78,8 +78,8 @@
         computed: {
             userData() {
                 return {
-                    _id: localStorage.getItem('login-user-id'),
-                    email: localStorage.getItem('login-user-email'),
+                    _id: sessionStorage.getItem('login-user-id'),
+                    email: sessionStorage.getItem('login-user-email'),
                     userImg: this.UserCursor?
                         this.UserCursor.profile.headerImage:
                         '/header/?img=07983baf1b5e4d298719bde5adc69e27',
@@ -89,7 +89,7 @@
 
         meteor: {
             UserCursor() {
-                return Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: localStorage.getItem('login-user-id')});
+                return Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: Meteor.userId()});
             },
         }
     }

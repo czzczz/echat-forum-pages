@@ -65,12 +65,12 @@
         methods: {
             loginAccount() {
                 console.log('log in');
-                localStorage.clear();
+                sessionStorage.clear();
                 Meteor.loginWithPassword(this.userData.accountID, this.userData.password, (err) => {
                     if(!err){
-                        localStorage.setItem('login-user-id', Meteor.userId());
+                        sessionStorage.setItem('login-user-id', Meteor.userId());
                         // console.log(Meteor.users.findOne({_id: Meteor.userId()}));
-                        localStorage.setItem('login-user-email', Meteor.user().profile.email);
+                        // sessionStorage.setItem('login-user-email', Meteor.user().profile.email);
                         this.$router.push({path: '/'})
                     } else{
                         console.log(err);

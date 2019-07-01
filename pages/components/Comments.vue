@@ -104,7 +104,7 @@
                 console.log('确认评论');
                 const comment = {
                     content: this.commentNew,
-                    user: localStorage.getItem('login-user-id')
+                    user: sessionStorage.getItem('login-user-id')
                 };
                 Meteor.call('message.comment', this.msgId, this.commentFocus, comment, err => {
                     if(err) console.log(err);
@@ -135,7 +135,7 @@
             loginUserData() {
                 return {
                     ...this.LoginUserCursor,
-                    _id: localStorage.getItem('login-user-id'),
+                    _id: sessionStorage.getItem('login-user-id'),
                 };
             },
             focusTargetName() {
@@ -175,7 +175,7 @@
             },
 
             LoginUserCursor() {
-                return Meteor.user()? Meteor.user().profile: Meteor.users.findOne({_id: localStorage.getItem('login-user-id')});
+                return Meteor.user()? Meteor.user().profile: Meteor.users.findOne({_id: Meteor.userId()});
             },
 
             FocusedUserCursor() {

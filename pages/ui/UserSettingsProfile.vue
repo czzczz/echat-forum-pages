@@ -232,7 +232,7 @@
 
         meteor: {
             getUserData() {
-                const user = Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: localStorage.getItem('login-user-id')});
+                const user = Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: sessionStorage.getItem('login-user-id')});
                 // console.log(user);
                 if(!user || !user.profile) return {};
                 this.userData.email = user.profile.email;

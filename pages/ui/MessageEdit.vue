@@ -134,7 +134,7 @@
                         value: this.tagValue,
                         agree: 1,
                         disagree: 0,
-                        owner: localStorage.getItem('login-user-id'),
+                        owner: sessionStorage.getItem('login-user-id'),
                     });
                     this.inputVisible = false;
                     this.tagValue = '';

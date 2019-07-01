@@ -208,10 +208,10 @@
             publishShortMessage() {
                 if(!this.shortMessage.content) this.$message('请输入要发布的消息内容！');
                 else {
-                    Meteor.call('message.publish', this.shortMessage, localStorage.getItem('login-user-id'), (error, msgId) => {
+                    Meteor.call('message.publish', this.shortMessage, sessionStorage.getItem('login-user-id'), (error, msgId) => {
                         if(error) console.log(error);
                         else {
-                            Meteor.call('user.addMessage', localStorage.getItem('login-user-id'), msgId, (error) => {
+                            Meteor.call('user.addMessage', sessionStorage.getItem('login-user-id'), msgId, (error) => {
                                 if(error) console.log(error);
                                 else {
                                     this.$message({
@@ -242,7 +242,7 @@
                         value: this.tagValue,
                         agree: 1,
                         disagree: 0,
-                        user: localStorage.getItem('login-user-id'),
+                        user: sessionStorage.getItem('login-user-id'),
                     });
                     this.inputVisible = false;
                     this.tagValue = '';
@@ -285,7 +285,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    Meteor.call('user.dropMessage', localStorage.getItem('login-user-id'), id, err => {
+                    Meteor.call('user.dropMessage', sessionStorage.getItem('login-user-id'), id, err => {
                         if(err) console.log(err);
                         else {
                             this.$message({
@@ -310,7 +310,7 @@
 
             UserCursor() {
                 if(!this.$route.params.userId) {
-                    return Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: localStorage.getItem('login-user-id')});
+                    return Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: sessionStorage.getItem('login-user-id')});
                 }
                 else {
                     return Meteor.users.findOne({_id: this.$route.params.userId});
@@ -334,7 +334,7 @@
             OneMessageCursor() {
                 const msg = Messages.findOne({_id: this.messageOperatedId});
                 if(!msg) return {};
-                if(msg.user === localStorage.getItem('login-user-email')) return {
+                if(msg.user === sessionStorage.getItem('login-user-id')) return {
                     ...msg,
                     isOwner: true
                 };

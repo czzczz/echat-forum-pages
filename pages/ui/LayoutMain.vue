@@ -36,7 +36,11 @@
             if(!Meteor.userId()) {
                 this.$router.push({name: 'login'});
             }
-            console.log(localStorage);
+            else {
+                sessionStorage.setItem('login-user-id', Meteor.userId());
+                // console.log(Meteor.users.findOne({_id: Meteor.userId()}));
+                console.log(sessionStorage);
+            }
         },
 
         data() {
@@ -104,8 +108,8 @@
 
             logout() {
                 Meteor.logout(() => {
-                    // localStorage.removeItem('login-user-id');
-                    localStorage.clear();
+                    // sessionStorage.removeItem('login-user-id');
+                    sessionStorage.clear();
                     this.$message('退出成功');
                     this.$router.push('/login');
                 });
@@ -115,8 +119,8 @@
         computed: {
             userData() {
                 return {
-                    _id: localStorage.getItem('login-user-id'),
-                    email: localStorage.getItem('login-user-email'),
+                    _id: sessionStorage.getItem('login-user-id'),
+                    email: sessionStorage.getItem('login-user-email'),
                     userImg: this.UserCursor?
                         this.serviceUrl + this.UserCursor.profile.headerImage:
                         `${this.serviceUrl}/header/?img=07983baf1b5e4d298719bde5adc69e27`,
@@ -126,7 +130,7 @@
 
         meteor: {
             UserCursor() {
-                return Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: localStorage.getItem('login-user-id')});
+                return Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: Meteor.userId()});
             },
         }
     }
