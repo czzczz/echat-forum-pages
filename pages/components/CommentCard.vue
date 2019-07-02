@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%">
+    <div style="width: 100%" :id="'com' + comment.user + '_' + comment.createdAt">
         <el-row>
             <el-col class="header-container">
                 <header-image :user-id="comment.user"

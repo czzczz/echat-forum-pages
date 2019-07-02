@@ -61,9 +61,9 @@
                 </div>
             </el-col>
         </el-row>
-        <el-row v-if="commentsVisible || alwaysShow" style="margin-bottom: 30px">
+        <el-row v-if="commentsVisible || show" style="margin-bottom: 30px">
             <el-col>
-                <comments :msg-id="message._id" :always-show="alwaysShow"></comments>
+                <comments :id="message.comments" :always-show="show"></comments>
             </el-col>
         </el-row>
     </div>
@@ -81,11 +81,43 @@
             'comments': Comments,
         },
 
+        created () {
+        },
+
+        mounted() {
+            this.intervalId = setInterval(() => {
+                this.$forceUpdate();
+            }, 1000)
+        },
+        updated() {
+            console.log('update',this.message);
+            if(sessionStorage.getItem('comments-id') && this.message.comments === sessionStorage.getItem('comments-id')) {
+                this.commentsVisible = true;
+                sessionStorage.removeItem('comments-id');
+            }
+            if(sessionStorage.getItem('component-id')) {
+                this.$nextTick( () => {
+                    console.log('jump', document.getElementById(sessionStorage.getItem('component-id')));
+                    if(document.getElementById(sessionStorage.getItem('component-id'))) {
+                        document.getElementById(sessionStorage.getItem('component-id')).scrollIntoView({block: "center"});
+                        sessionStorage.removeItem('component-id');
+                    }
+                });
+            }
+        },
+
+        beforeDestroy () {
+            clearInterval(this.intervalId);
+        },
+
         data() {
             return {
                 optionPopoverVisible: false,
                 commentsVisible: false,
                 serviceUrl: Meteor.settings.public.serviceUrl,
+                show: false,
+
+                intervalId: 0,//定时器
             };
         },
 

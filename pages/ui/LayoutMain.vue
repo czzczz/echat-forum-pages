@@ -39,7 +39,7 @@
             else {
                 sessionStorage.setItem('login-user-id', Meteor.userId());
                 // console.log(Meteor.users.findOne({_id: Meteor.userId()}));
-                console.log(sessionStorage);
+                console.log('sessionStorage', sessionStorage);
             }
         },
 

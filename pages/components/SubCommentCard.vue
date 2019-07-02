@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :id="'sub' + SubComment.user + '_' + SubComment.createdAt">
         <el-row>
             <el-col :span="16" class="header-container">
                 <header-image :user-id="sub.user"

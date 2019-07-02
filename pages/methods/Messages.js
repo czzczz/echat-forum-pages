@@ -7,7 +7,7 @@ Meteor.methods({
             content: message.content,
             tags: message.tags,
             thumbsUp: [],
-            comments: [],
+            comments: Comments.insert({list: []}),
             user: user,
             createdAt: timeStamp,
             updatedAt: timeStamp,

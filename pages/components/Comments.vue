@@ -8,11 +8,15 @@
             <div v-for="(com, idx) in commentsData"
                  class="comment-card"
                  :key="idx">
-                <comment-card :comment="com" @to-comment="commentComment" @sub-comment-comment="subCommentComment"></comment-card>
+                <comment-card :comment="com"
+                              :ref="'comment' + idx"
+                              @to-comment="commentComment(arguments, idx)"
+                              @sub-comment-comment="subCommentComment(arguments, idx)">
+                </comment-card>
             </div>
         </div>
         <div>
-            <div style="height: 300px;display: none" :id="'comment-input' + msgId"></div>
+            <div style="height: 300px;display: none" :id="'comment-input' + id"></div>
             <el-row  class="comment-box" type="flex" justify="space-between">
                 <el-col :span="2">
                     <div style="width: 30px;">
@@ -44,17 +48,23 @@
 </template>
 
 <script>
+    import '../collections/Comments';
+
     import HeaderImage from './HeaderImage';
     import CommentCard from './CommentCard';
     import _ from 'lodash';
 
     export default {
         name: "Comments",
-        props: ['msgId', 'alwaysShow'],
+        props: ['id', 'alwaysShow'],
 
         components: {
             HeaderImage,
             CommentCard,
+        },
+
+        mounted() {
+
         },
 
         data() {
@@ -63,6 +73,7 @@
                 commentButtonVisible: -1,
                 commentFocus: {
                     type: 'normal',
+                    index: -1,
                     id: {
                         user: '',
                         ts: 0,
@@ -80,39 +91,86 @@
 
         methods: {
             focusCommentInput() {
-                document.getElementById(`comment-input${this.msgId}`).scrollIntoView();
+                document.getElementById(`comment-input${this.id}`).scrollIntoView();
                 if(this.$refs.commentNewInput) {
                     this.$refs.commentNewInput.$refs.textarea.focus();
                 }
             },
-            commentComment(user, ts) {
-                // console.log('选定评论',id);
+            commentComment(arguments, index) {
+                console.log('选定评论', arguments,index);
                 this.commentFocus.type = 'comment';
-                this.commentFocus.id.user = user;
-                this.commentFocus.id.ts = ts;
+                this.commentFocus.id.user = arguments[0];
+                this.commentFocus.id.ts = arguments[1];
+                this.commentFocus.index = index;
                 this.focusCommentInput();
             },
-            subCommentComment(comUser, comTs, tarUser, tarTs) {
+            subCommentComment(arguments, index) {
+                console.log('选定评论',arguments, index);
                 this.commentFocus.type = 'sub';
-                this.commentFocus.id.user = comUser;
-                this.commentFocus.id.ts = comTs;
-                this.commentFocus.to.user = tarUser;
-                this.commentFocus.to.ts = tarTs;
+                this.commentFocus.id.user = arguments[0];
+                this.commentFocus.id.ts = arguments[1];
+                this.commentFocus.to.user = arguments[2];
+                this.commentFocus.to.ts = arguments[3];
+                this.commentFocus.index = index;
                 this.focusCommentInput();
             },
             publishComment() {
-                console.log('确认评论');
+                if(!this.commentNew) return null;
                 const comment = {
                     content: this.commentNew,
-                    user: sessionStorage.getItem('login-user-id')
+                    user: sessionStorage.getItem('login-user-id'),
                 };
-                Meteor.call('message.comment', this.msgId, this.commentFocus, comment, err => {
-                    if(err) console.log(err);
-                    else {
-                        this.commentNew = '';
-                        this.commentFocus.type = 'normal';
-                    }
-                });
+                if(this.commentFocus.type === 'normal') {
+                    console.log('normal', this.commentFocus, this.commentNew);
+                    Meteor.call('comments.publish', this.id, comment, (err, res) => {
+                        if(err) console.log(err);
+                        else {
+                            console.log(res);
+                            const componentId = 'com' + sessionStorage.getItem('login-user-id') + '_' + res;
+                            sessionStorage.setItem('comments-id', this.id);
+                            sessionStorage.setItem('component-id', componentId);
+                            location.reload();
+                        }
+                    });
+                }
+                else if(this.commentFocus.type === 'comment') {
+                    console.log('comment', this.commentFocus, this.commentNew);
+                    const target = {
+                        user: this.commentFocus.id.user,
+                        ts: this.commentFocus.id.ts,
+                    };
+                    Meteor.call('comments.comment', this.id, target, comment, (err, res) => {
+                        if(err) console.log(err);
+                        else {
+                            console.log(res);
+                            const componentId = 'sub' + sessionStorage.getItem('login-user-id') + '_' + res;
+                            sessionStorage.setItem('comments-id', this.id);
+                            sessionStorage.setItem('component-id', componentId);
+                            location.reload();
+                        }
+                    });
+                }
+                else if(this.commentFocus.type === 'sub') {
+                    console.log('sub', this.commentFocus, this.commentNew);
+                    const locate = {
+                        user: this.commentFocus.id.user,
+                        ts: this.commentFocus.id.ts,
+                    };
+                    const target = {
+                        user: this.commentFocus.to.user,
+                        ts: this.commentFocus.to.ts,
+                    };
+                    Meteor.call('comments.sub2sub', this.id, locate, target, comment, (err, res) => {
+                        if(err) console.log(err);
+                        else {
+                            console.log(res);
+                            const componentId = 'sub' + sessionStorage.getItem('login-user-id') + '_' + res;
+                            sessionStorage.setItem('comments-id', this.id);
+                            sessionStorage.setItem('component-id', componentId);
+                            location.reload();
+                        }
+                    });
+                }
             },
             cancelChosed() {
                 this.commentFocus.type = 'normal';
@@ -130,7 +188,19 @@
                 return this.commentsData && this.commentsData.length && this.commentsData.length > 0;
             },
             commentsData() {
-                return this.$subReady.Messages? this.CommentsCursor: [];
+                return this.$subReady.Comments? this.CommentsCursor: [];
+            },
+            commentsFocusIndex() {
+                let index = -1;
+                if(this.commentFocus.id.user && this.commentFocus.id.ts && this.commentsData) {
+                    this.commentsData.forEach( comment => {
+                        if(comment.user === this.commentFocus.id.user && comment.createdAt === this.commentFocus.id.ts) {
+                            console.log('index', comment, this.commentsData.indexOf(comment));
+                            index = this.commentsData.indexOf(comment);
+                        }
+                    });
+                }
+                return index;
             },
             loginUserData() {
                 return {
@@ -138,22 +208,19 @@
                     _id: sessionStorage.getItem('login-user-id'),
                 };
             },
-            focusTargetName() {
-                if(this.commentFocus.type === 'normal') return '主题';
-                return this.FocusedUserCursor? this.FocusedUserCursor.profile.nickname: '';
-            },
         },
 
         meteor: {
             $subscribe: {
-                Messages: [],
+                Comments: [],
             },
 
 
             CommentsCursor() {
-                const comments = Messages.findOne({_id: this.msgId})? Messages.findOne({_id: this.msgId}).comments: {};
+                const comments = Comments.findOne({_id: this.id})? Comments.findOne({_id: this.id}).list: [];
+                let result = [];
                 if(comments && comments.length && comments.length > 0) {
-                    return _.orderBy(comments.map( comment => {
+                    result =  _.orderBy(comments.map( comment => {
                         const user = Meteor.users.findOne({_id: comment.user}).profile;
                         const res = {
                             ...comment,
@@ -171,19 +238,11 @@
                         return res;
                     }), ['subComments.length', 'createdAt'], ['desc', 'desc']);
                 }
-                return [];
+                return result;
             },
 
             LoginUserCursor() {
                 return Meteor.user()? Meteor.user().profile: Meteor.users.findOne({_id: Meteor.userId()});
-            },
-
-            FocusedUserCursor() {
-                if(this.commentFocus.type === 'sub') return Meteor.users.findOne({_id: this.commentFocus.to.user});
-                else if(this.commentFocus.type === 'comment') return Meteor.users.findOne({_id: this.commentFocus.to.user});
-                else return Messages.findOne({_id: this.msgId})?
-                        Meteor.users.findOne({_id: Messages.findOne({_id: this.msgId}).user}):
-                        {};
             },
         }
     }

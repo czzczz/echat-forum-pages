@@ -12,6 +12,10 @@ import '/pages/collections/Articles';
 import '/pages/publications/Articles';
 import '/pages/methods/Articles';
 
+import '/pages/collections/Comments';
+import '/pages/publications/Comments';
+import '/pages/methods/Comments';
+
 Meteor.startup(() => {
   // code to run on server at startup
 });
