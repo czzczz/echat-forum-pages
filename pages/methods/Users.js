@@ -85,6 +85,12 @@ Meteor.methods({
         else return Meteor.users.update({_id: user},
             {$addToSet: {'profile.messagesDropped': {id: msgId, time: new Date().getTime()}}, $pull: {'profile.messages': msgId}});
     },
+    'user.dropArticle'(user, aid) {
+        return Meteor.users.update({_id: user}, {
+            $pull: {'profile.articles': aid},
+            $addToSet: {'profile.articlesDropped': {id: aid, time: new Date().getTime()}}
+        });
+    },
     'user.thumbsUpMessage'(user, msgId) {
         return Meteor.users.update(user, {$addToSet: {'profile.thumbsUpMessages': {id: msgId, time: new Date().getTime()}}});
     },

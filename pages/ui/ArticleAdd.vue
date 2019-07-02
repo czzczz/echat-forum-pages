@@ -1,10 +1,23 @@
 <template>
-    <el-row type="flex" justify="center">
-        <el-col :span="16">
+    <el-row type="flex" justify="center" style="margin-top: 20px;">
+        <el-col :span="13">
             <el-form label-width="80">
                 <el-form-item label="标题" prop="title">
                     <el-input size="mini" placeholder="请输入文章标题" v-model="article.title" style="width: 80%"></el-input>
-                    <div>提示(<span style="color: red">*</span>)：标题仅用作分享，文章标题请自行输入及设置格式</div>
+                    <div>提示(<span style="color: red">{{' * '}}</span>)：标题仅用作分享，文章标题请自行输入及设置格式</div>
+                </el-form-item>
+                <el-form-item>
+                    <el-row type="flex" justify="end">
+                        <el-col :span="2">
+                            <el-button size="mini"@click="goBack">取消</el-button>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button size="mini" type="primary" @click="preview">预览</el-button>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button size="mini" type="primary" @click="publishArticle">发布</el-button>
+                        </el-col>
+                    </el-row>
                 </el-form-item>
                 <el-form-item label="内容" prop="content">
                     <editor
@@ -15,6 +28,14 @@
                 </el-form-item>
             </el-form>
         </el-col>
+        <el-dialog
+                title="长文预览"
+                :visible.sync="dialogPreviewVisible"
+                width="50%">
+            <div class="bottom clearfix" v-html="article.content">
+                <span  class="message"  v-text="article.content"></span>
+            </div>
+        </el-dialog>
     </el-row>
 </template>
 
@@ -103,9 +124,35 @@
                     ],
                     toolbar: 'formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help | codesample | image',
                     images_upload_handler: TinymceImageUpload,
-                }
+                },
+
+                dialogPreviewVisible: false,
             };
         },
+
+        methods: {
+            goBack() {
+                this.$router.go(-1);
+            },
+            preview() {
+                this.dialogPreviewVisible = true;
+            },
+            publishArticle() {
+                if(!this.article.title || !this.article.content) {
+                    this.$message.error({
+                        message: '请填写标题并完善正文'
+                    });
+                }
+                else {
+                    Meteor.call('article.publish', this.article, sessionStorage.getItem('login-user-id'), (err, res) => {
+                        if(err) console.log(err);
+                        else {
+                            this.$router.push({path: '/home'});
+                        }
+                    });
+                }
+            },
+        }
     }
 </script>
 

@@ -208,19 +208,14 @@
             publishShortMessage() {
                 if(!this.shortMessage.content) this.$message('请输入要发布的消息内容！');
                 else {
-                    Meteor.call('message.publish', this.shortMessage, sessionStorage.getItem('login-user-id'), (error, msgId) => {
+                    Meteor.call('message.publish', this.shortMessage, sessionStorage.getItem('login-user-id'), (error) => {
                         if(error) console.log(error);
                         else {
-                            Meteor.call('user.addMessage', sessionStorage.getItem('login-user-id'), msgId, (error) => {
-                                if(error) console.log(error);
-                                else {
-                                    this.$message({
-                                        message: '消息已发布',
-                                        type: 'success'
-                                    });
-                                    this.cleanUp();
-                                }
+                            this.$message({
+                                message: '消息已发布',
+                                type: 'success'
                             });
+                            this.cleanUp();
                         }
                     });
                 }

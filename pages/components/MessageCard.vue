@@ -28,7 +28,7 @@
         </el-row>
         <el-row @dblclick.native="messageOperate('bodyClick')">
             <el-col style="margin-top: 10px; margin-bottom: 20px;">
-                <p>{{messageContent}}</p>
+                <p v-html="messageContent"></p>
             </el-col>
             <el-col style="margin-bottom: 20px;" v-if="hasTag">标签：
                 <el-tag

@@ -13,7 +13,9 @@ Meteor.methods({
             updatedAt: timeStamp,
             changeHistory: [],
         };
-        return Messages.insert(newMessage);
+        const mid = Messages.insert(newMessage);
+        Meteor.users.update({_id: user}, {$addToSet: {'profile.messages': mid}});
+        return mid;
     },
     'message.delete'(id) {
         Messages.remove(id);
