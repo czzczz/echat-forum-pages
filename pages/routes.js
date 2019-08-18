@@ -88,7 +88,7 @@ RouterFactory.configure( router => {
                             component: ArticleAdd,
                         },
                         {
-                            path: 'edit',
+                            path: 'edit/:aid',
                             name: 'ArticleEdit',
                             component: ArticleEdit,
                         },

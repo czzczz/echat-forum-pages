@@ -104,7 +104,7 @@
                 const old = this.getMessage;
                 console.log('old msg', old);
                 console.log('new message', msg);
-                axios.post(`${Meteor.settings.public.serviceUrl}/message/update`, {
+                axios.post(`${Meteor.settings.public.serviceUrl}/update/message`, {
                     id: old._id,
                     newMessage: msg
                 }).then( res => {

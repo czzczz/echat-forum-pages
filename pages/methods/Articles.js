@@ -31,4 +31,8 @@ Meteor.methods({
             path: `/article/viewer/${aid}`
         };
     },
+    'article.delete'(aid) {
+        Articles.remove(aid);
+        return aid;
+    },
 });

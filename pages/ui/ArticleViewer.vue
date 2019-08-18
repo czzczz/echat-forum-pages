@@ -22,6 +22,14 @@
                 </el-row>
             </el-col>
         </el-row>
+        <div class="side-button-list">
+            <div class="side-button" @click="editArticle">
+                <i class="el-icon-edit"></i>
+            </div>
+            <div class="side-button" @click="deleteArticle">
+                <i class="el-icon-delete"></i>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -73,6 +81,37 @@
             },
         },
 
+        methods: {
+            editArticle() {
+                this.$router.push({path: `/article/edit/${this.$route.params.aid}`});
+            },
+            deleteArticle() {
+                if(sessionStorage.getItem('login-user-id') === this.articleData.user) {
+                    this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });          
+                    });
+                }
+                else {
+                    this.$message({
+                        message: '请先登陆后再做该操作',
+                        type: 'error'
+                    });
+                }
+            },
+        },
+
         meteor: {
             $subscribe: {
                 Articles: [],
@@ -89,5 +128,21 @@
 </script>
 
 <style scoped>
-
+    .side-button-list {
+        position: fixed;
+        right: 150px;
+        bottom: 100px;
+        z-index: 999;
+    }
+    .side-button {
+        background-color: white;
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        box-shadow: 0 0 5px 5px #cccccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
 </style>
