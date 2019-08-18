@@ -27,7 +27,7 @@ Meteor.methods({
 
         if(!profile.nickname) profile.nickname ='邮箱用户' + profile.email.split('@')[0];
 
-        profile.headerImage = '/header/?img=07983baf1b5e4d298719bde5adc69e27';
+        profile.headerImage = '/header/?img=2627fa6bfcd407971bea4d77b5a634f2';
 
         const config = {
             email: profile.email,
