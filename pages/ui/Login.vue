@@ -68,12 +68,28 @@
                 sessionStorage.clear();
                 Meteor.loginWithPassword(this.userData.accountID, this.userData.password, (err) => {
                     if(!err){
+                        const user = Meteor.users.findOne({'profile.email': this.userData.accountID});
+                        if (user) {
+                            if (!user.emails[0].verified) {
+                                this.$message({
+                                    showClose: true,
+                                    message: '账户未验证，不可登录！',
+                                    type: 'error'
+                                });
+                                return;
+                            }
+                        }
                         sessionStorage.setItem('login-user-id', Meteor.userId());
                         // console.log(Meteor.users.findOne({_id: Meteor.userId()}));
                         // sessionStorage.setItem('login-user-email', Meteor.user().profile.email);
-                        this.$router.push({path: '/'})
+                        this.$router.push({path: '/home'})
                     } else{
                         console.log(err);
+                        this.$message({
+                            message: '无法找到该账号，请注册并验证邮箱后再登录',
+                            type: 'error'
+                        });
+                        return;
                     }
                 });
             },

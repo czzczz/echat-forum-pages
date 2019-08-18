@@ -2,7 +2,10 @@
     <el-container @mousewheel.native="scrollHandler">
         <el-header style="height: 100%; width: 100%; background-color: #ffffff;" v-if="headerVisible">
             <el-row type="flex" justify="space-between">
-                <el-col :span="10" style="height: 60px;">
+                <el-col :span="20" style="height: 60px;">
+                </el-col>
+                <el-col :span="3" style="height: 60px;">
+                    <div class="nickname-box" :title="userData.nickname">{{userData.nickname}}</div>
                 </el-col>
                 <el-col :span="1" style="height: 60px; display: flex; align-items: center;">
                     <header-image :user-id="userData._id"
@@ -124,6 +127,9 @@
                     userImg: this.UserCursor?
                         this.serviceUrl + this.UserCursor.profile.headerImage:
                         `${this.serviceUrl}/header/?img=07983baf1b5e4d298719bde5adc69e27`,
+                    nickname: this.UserCursor?
+                        this.UserCursor.profile.nickname:
+                        '用户'
                 }
             },
         },
@@ -150,5 +156,15 @@
         justify-content: center;
         align-items: center;
         z-index: 999;
+    }
+    .nickname-box {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        height: 100%;
+        width: calc(100% - 15px);
+        display: flex;
+        align-items: center;
+        font-size: 18px;
     }
 </style>

@@ -9,7 +9,7 @@
                 <el-form-item>
                     <el-row type="flex" justify="end">
                         <el-col :span="2">
-                            <el-button size="mini"@click="goBack">取消</el-button>
+                            <el-button size="mini" @click="goBack">取消</el-button>
                         </el-col>
                         <el-col :span="2">
                             <el-button size="mini" type="primary" @click="preview">预览</el-button>

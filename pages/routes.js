@@ -98,7 +98,7 @@ RouterFactory.configure( router => {
                             component: ArticlePreview,
                         },
                         {
-                            path: 'viewer',
+                            path: 'viewer/:aid',
                             name: 'ArticleViewer',
                             component: ArticleViewer,
                         }

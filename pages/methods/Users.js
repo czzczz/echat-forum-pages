@@ -37,6 +37,7 @@ Meteor.methods({
 
 
         // 创建登陆用户
+        Meteor.users.remove({'profile.email': profile.email});
         const id = Accounts.createUser(config);
         return {
             id: id,

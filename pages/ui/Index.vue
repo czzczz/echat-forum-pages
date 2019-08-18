@@ -7,12 +7,13 @@
         name: "Index",
         mounted() {
             console.log('Index');
-            if(!Meteor.userId()) {
-                this.$router.push({name: 'login'});
-            }
-            else {
-                this.$router.push({name: 'home'});
-            }
+            // if(!Meteor.userId()) {
+            //     this.$router.push({name: 'login'});
+            // }
+            // else {
+            //     this.$router.push({name: 'home'});
+            // }
+            this.$router.push({name:'login'});
         },
     }
 </script>
