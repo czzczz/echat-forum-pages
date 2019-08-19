@@ -254,12 +254,12 @@
                 this.shortMessage.tags = list;
             },
             // 操作
-            messageOperate(operationName, msgId) {
-                console.log(operationName, msgId);
+            messageOperate(operationName, msgId, aid) {
+                console.log(operationName, msgId, aid);
                 if(operationName === 'view' || operationName === 'bodyClick') this.viewMessage(msgId);
                 else if(operationName === 'share') {}
 
-                else if(operationName === 'edit') this.editMessage(msgId);
+                else if(operationName === 'edit') this.editMessage(msgId, aid);
                 else if(operationName === 'delete') this.deleteMessage(msgId);
 
                 else if(operationName === 'follow') {}
@@ -271,8 +271,9 @@
                 this.messageOperatedId = id;
                 this.dialogViewMessageVisible = true;
             },
-            editMessage(id) {
-                this.$router.push(`/message-edit/${id}`);
+            editMessage(id, aid) {
+                if(aid) this.$router.push({path: `/article/edit/${aid}`});
+                else this.$router.push(`/message-edit/${id}`);
             },
             deleteMessage(id) {
                 this.$confirm('即将删除这条消息, 是否继续?', '提示', {

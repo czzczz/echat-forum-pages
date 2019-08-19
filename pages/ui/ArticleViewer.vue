@@ -24,10 +24,10 @@
         </el-row>
         <div class="side-button-list">
             <div class="side-button" @click="editArticle">
-                <i class="el-icon-edit"></i>
+                <font-awesome-icon :icon="['far', 'edit']" class="awesome"></font-awesome-icon>
             </div>
             <div class="side-button" @click="deleteArticle">
-                <i class="el-icon-delete"></i>
+                <font-awesome-icon :icon="['far', 'trash-alt']" class="awesome"></font-awesome-icon>
             </div>
         </div>
     </div>
@@ -92,9 +92,20 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
+                        Meteor.call('article.delete', this.$route.params.aid, (err) => {
+                            if(err) {
+                                this.$message({
+                                    type: 'error',
+                                    message: '删除失败!'
+                                });   
+                            }
+                            else {
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                                this.$router.push('/home')
+                            }
                         });
                     }).catch(() => {
                         this.$message({
@@ -128,6 +139,7 @@
 </script>
 
 <style scoped>
+    @import url('icons.css');
     .side-button-list {
         position: fixed;
         right: 150px;

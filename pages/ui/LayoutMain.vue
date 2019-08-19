@@ -18,7 +18,7 @@
             </el-row>
         </el-header>
         <div class="arrow-to-top" v-if="!headerVisible" @click="toTop">
-            <i class="el-icon-caret-top"></i>
+            <font-awesome-icon :icon="['fas', 'caret-up']" class="awesome"></font-awesome-icon>
         </div>
         <div id="main-content">
             <router-view></router-view>

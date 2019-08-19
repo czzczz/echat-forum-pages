@@ -1,3 +1,5 @@
+import { strict } from "assert";
+
 Meteor.methods({
     'article.publish'(article, user) {
         const timeStamp = new Date().getTime();
@@ -22,6 +24,7 @@ Meteor.methods({
             createdAt: timeStamp,
             updatedAt: timeStamp,
             changeHistory: [],
+            article: aid,
         };
         const mid = Messages.insert(newMessage);
         Meteor.users.update({_id: user}, {$addToSet: {'profile.articles': aid, 'profile.messages': mid}});
@@ -32,7 +35,17 @@ Meteor.methods({
         };
     },
     'article.delete'(aid) {
-        Articles.remove(aid);
+        const atc = Articles.findOne(aid);
+        const msg = Messages.findOne({comments: atc.comments});
+        Meteor.users.update({_id: atc.user}, {
+            $pull: {
+                'profile.messages': msg._id,
+                'profile.articles': aid,
+            },
+            $addToSet: {
+                'profile.articlesDropped': aid
+            }
+        });
         return aid;
     },
 });

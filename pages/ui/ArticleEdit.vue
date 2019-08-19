@@ -142,21 +142,32 @@
                         message: '请填写标题并完善正文'
                     });
                 }
-                axios.post(`${Meteor.settings.public.serviceUrl}/update/article`, {
-                    articleId: this.article._id,
-                    article:this.article
-                }).then( res => {
-                    console.log(res);
+                this.$confirm('即将修改文章内容, 是否确认?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post(`${Meteor.settings.public.serviceUrl}/update/article`, {
+                        articleId: this.article._id,
+                        article:this.article
+                    }).then( res => {
+                        console.log(res);
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        });
+                        this.$router.go(-1);
+                    }).catch( err => {
+                        console.log(err);
+                        this.$message.error({
+                            message: '修改失败',
+                        });
+                    });
+                }).catch(() => {
                     this.$message({
-                        message: '修改成功',
-                        type: 'success'
-                    });
-                    this.$router.go(-1);
-                }).catch( err => {
-                    console.log(err);
-                    this.$message.error({
-                        message: '修改失败',
-                    });
+                        type: 'info',
+                        message: '已取消'
+                    });          
                 });
             },
         },

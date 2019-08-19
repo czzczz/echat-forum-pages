@@ -126,7 +126,7 @@
                 this.optionPopoverVisible = true;
             },
             messageOperate(value) {
-                this.$emit('operate', value, this.message._id);
+                this.$emit('operate', value, this.message._id, this.message.article);
                 this.optionPopoverVisible = false;
             },
             showComments() {
@@ -168,9 +168,22 @@
                 return res;
             },
             messageOperationData() {
-                if(this.isOwner) return this.messageOperation.owner;
+                let res = [];
+                if(this.isOwner) {
+                    if(this.message.article) {
+                        this.messageOperation.owner.forEach(ope => {
+                            if(ope.value === 'edit') {
+                                ope.label = '编辑长文';
+                            }
+                            // else if(ope.value === 'delete') {
+                            //     ope.label = '删除长文';
+                            // }
+                            res.push(ope);
+                        });
+                    }
+                    else res = this.messageOperation.owner;
+                }
                 else {
-                    const res = [];
                     if(this.isFollowed) {
                         this.messageOperation.visitor.forEach( ope => {
                             if(ope.value !== 'follow') res.push(ope);
@@ -181,8 +194,8 @@
                             if(ope.value !== 'de-follow') res.push(ope);
                         });
                     }
-                    return res;
                 }
+                return res;
             },
         },
 
