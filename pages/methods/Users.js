@@ -25,6 +25,8 @@ Meteor.methods({
         profile.articles = [];
         profile.articlesDropped = [];
 
+        profile.follows = [];
+
         if(!profile.nickname) profile.nickname ='邮箱用户' + profile.email.split('@')[0];
 
         profile.headerImage = '/header/?img=2627fa6bfcd407971bea4d77b5a634f2';

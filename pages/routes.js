@@ -25,6 +25,7 @@ import ArticleAdd from "./ui/ArticleAdd";
 import ArticleEdit from "./ui/ArticleEdit";
 import ArticlePreview from "./ui/ArticlePreview";
 import ArticleViewer from "./ui/ArticleViewer";
+import SearchResult from './ui/SearchResult';
 
 RouterFactory.configure( router => {
     router.addRoutes([
@@ -57,6 +58,11 @@ RouterFactory.configure( router => {
                     path: '/home',
                     name: 'home',
                     component: Mainpage,
+                },
+                {
+                    path: '/search',
+                    name: 'search',
+                    component: SearchResult,
                 },
                 {
                     path: '/message-edit/:msgId',

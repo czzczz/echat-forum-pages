@@ -2,9 +2,20 @@
     <el-container @mousewheel.native="scrollHandler">
         <el-header style="height: 100%; width: 100%; background-color: #ffffff;" v-if="headerVisible">
             <el-row type="flex" justify="space-between">
-                <el-col :span="20" style="height: 60px;">
-                </el-col>
                 <el-col :span="3" style="height: 60px;">
+                </el-col>
+                <el-col :span="18" style="height: 60px; display: flex; justify-content: center;">
+                    <div class="search-box">
+                        <el-input size="small" placeholder="要搜索的内容" v-model="searchContent">
+                        </el-input>
+                        <div style="height:60px; width:60px; display:flex; align-items: center; justify-content:center; margin-left: 20px;">
+                            <el-button type="primary" round size="small" @click="search">
+                                <font-awesome-icon :icon="['fas', 'search']" class="awesome"></font-awesome-icon>
+                            </el-button>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="2" style="height: 60px;">
                     <div class="nickname-box" :title="userData.nickname">{{userData.nickname}}</div>
                 </el-col>
                 <el-col :span="1" style="height: 60px; display: flex; align-items: center;">
@@ -28,6 +39,7 @@
 
 <script>
     import HeaderImage from "../components/HeaderImage";
+    import _ from 'lodash';
     export default {
         name: "LayoutMain",
 
@@ -68,7 +80,8 @@
                         name: 'logout',
                         label: '退出登录'
                     }
-                ]
+                ],
+                searchContent: ''
             };
         },
 
@@ -116,7 +129,14 @@
                     this.$message('退出成功');
                     this.$router.push('/login');
                 });
-            }
+            },
+
+            search() {
+                if(this.searchContent) {
+                    const list = _.compact(this.searchContent.split(/\s+/));
+                    this.$router.push(`/search?keyword=${list.join(',')}`)
+                }
+            },
         },
 
         computed: {
@@ -166,5 +186,15 @@
         display: flex;
         align-items: center;
         font-size: 18px;
+    }
+    .search-box {
+        width: 450px;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .search-box >>> input {
+        border-radius: 16px!important;
     }
 </style>

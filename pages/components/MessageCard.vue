@@ -5,7 +5,8 @@
                 <ou-persona size="sm"
                             :src="serviceUrl + upUserData.headerImage"
                             :primaryText="upUserData.nickname"
-                            :secondaryText="upUserData.email"/>
+                            :secondaryText="upUserData.email"
+                            @click.native="goMain"/>
             </el-col>
             <el-col :span="1">
                 <el-popover
@@ -132,6 +133,9 @@
             showComments() {
                 console.log('show comments');
                 this.commentsVisible = !this.commentsVisible;
+            },
+            goMain() {
+                this.$router.push(`/user/page/${this.message.user}`);
             },
         },
 
