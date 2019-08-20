@@ -301,7 +301,8 @@
 
         meteor: {
             $subscribe: {
-                Messages: []
+                Messages: [],
+                Users: [],
             },
 
             UserCursor() {
@@ -309,6 +310,7 @@
                     return Meteor.user()? Meteor.user(): Meteor.users.findOne({_id: sessionStorage.getItem('login-user-id')});
                 }
                 else {
+                    console.log('aaaaaaaaaaaaaaaaaaaaaaaaa',this.$route.params.userId);
                     return Meteor.users.findOne({_id: this.$route.params.userId});
                 }
             },

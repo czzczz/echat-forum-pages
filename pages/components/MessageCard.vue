@@ -14,7 +14,7 @@
                         width="50"
                         v-model="optionPopoverVisible">
                     <div slot="reference" @click.stop.native="showMessageOption">
-                        <i class="el-icon-arrow-down"></i>
+                        <font-awesome-icon v-if="!hasFollowed" :icon="['fas', 'chevron-down']" class="awesome"></font-awesome-icon>
                     </div>
                     <div class="option-list">
                         <div
@@ -76,7 +76,7 @@
 
     export default {
         name: "MessageCard",
-        props: ['message', 'is-owner', 'is-followed', 'message-operation', 'alwaysShow'],
+        props: ['message', 'message-operation', 'alwaysShow'],
 
         components: {
             'comments': Comments,
@@ -159,6 +159,19 @@
                 }
                 return {};
             },
+            loginUserData() {
+                if(this.LoginUserCursor && this.LoginUserCursor.profile) {
+                    return this.LoginUserCursor.profile;
+                }
+                return {};
+            },
+            isOwner() {
+                return this.message.user === this.LoginUserCursor._id;
+            },
+            isFollowed() {
+                let followList = new Set(this.loginUserData.follows);
+                return followList.has(this.message.user);
+            },
             updateTimeData() {
                 const msg = this.message;
                 let res = '';
@@ -210,7 +223,9 @@
                 return this.message? Meteor.users.findOne({_id: this.message.user}): undefined;
             },
 
-            LoginUserCursor() {},
+            LoginUserCursor() {
+                return Meteor.users.findOne({_id: sessionStorage.getItem('login-user-id')});
+            },
         },
     }
 </script>

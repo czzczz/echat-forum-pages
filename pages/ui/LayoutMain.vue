@@ -134,7 +134,7 @@
             search() {
                 if(this.searchContent) {
                     const list = _.compact(this.searchContent.split(/\s+/));
-                    this.$router.push(`/search?keyword=${list.join(',')}`)
+                    this.$router.push(`/search?keywords=${list.join(',')}`)
                 }
             },
         },
@@ -163,6 +163,9 @@
 </script>
 
 <style scoped>
+    #main-content {
+        background-color: #2edbdb48;
+    }
     .arrow-to-top {
         position: fixed;
         background-color: white;
