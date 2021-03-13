@@ -15,7 +15,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "@tinymce/tinymce-vue": "^2.1.0",
     "axios": "^0.21.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "dependencies": "0.0.1",
     "element-china-area-data": "^4.1.2",
     "element-ui": "^2.8.2",
